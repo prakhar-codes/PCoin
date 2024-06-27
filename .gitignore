@@ -1,3 +1,29 @@
-__pycache__/
+# Flask backend
+.venv/
+venv/
+env/
+pip-*.log
+.Python
 *.pyc
+*.pyo
+__pycache__/
+.idea/
+.vscode/
 .env
+
+# React frontend
+node_modules/
+package-lock.json
+yarn.lock
+build/
+dist/
+.env
+.idea/
+.vscode/
+
+# General
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
