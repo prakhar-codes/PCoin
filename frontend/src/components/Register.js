@@ -9,6 +9,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [validationError, setValidationError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const validateUsername = (username) => {
     const usernameRegex = /^[a-zA-Z0-9]+$/; // Only digits and alphabets
@@ -68,12 +69,13 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h1>Register</h1>
-      {validationError && <p style={{ color: "red" }}>{validationError}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleRegister}>
+    <div className="login-container"> {/* Reuse the styling */}
+      <h1 className="login-title">Register</h1>
+      {validationError && <p className="login-error">{validationError}</p>}
+      {error && <p className="login-error">{error}</p>}
+      <form className="login-form" onSubmit={handleRegister}>
         <input
+          className="login-input"
           type="text"
           placeholder="Username"
           value={username}
@@ -81,6 +83,7 @@ const Register = () => {
           required
         />
         <input
+          className="login-input"
           type="email"
           placeholder="Email"
           value={email}
@@ -88,13 +91,22 @@ const Register = () => {
           required
         />
         <input
-          type="password"
+          className="login-input"
+          type={showPassword ? "text" : "password"}
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Register</button>
+        <label className="show-password">
+          <input
+            type="checkbox"
+            checked={showPassword}
+            onChange={() => setShowPassword(!showPassword)}
+          />
+          Show password
+        </label>
+        <button className="login-button" type="submit">Register</button>
       </form>
     </div>
   );

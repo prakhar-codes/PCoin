@@ -1,21 +1,24 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from './AuthContext';
 
 const Home = () => {
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
+
   return (
     <div>
       <h1>Home Page</h1>
       <p>Welcome to the Home Page!</p>
       <p>Click below to get started:</p>
-      <ul>
-        <li>
-          <Link to="/login">Login</Link>
-        </li>
-        <li>
-          <Link to="/register">Register</Link>
-        </li>
-      </ul>
-      {/* Add any additional content or functionality here */}
+      <p><Link to="/login">Login</Link></p>
+      <p><Link to="/register">Register</Link></p>
     </div>
   );
 }

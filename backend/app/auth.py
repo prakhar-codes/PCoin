@@ -1,59 +1,50 @@
 from flask import Blueprint, jsonify, request
-from flask_login import current_user, login_user, logout_user, login_required
+from flask_jwt_extended import create_access_token, unset_jwt_cookies, jwt_required
 from .models import User
-from . import db, bcrypt
+from . import db, bcrypt, jwt
 
 auth = Blueprint('auth', __name__)
 
 @auth.route('/register', methods=['POST'])
 def register():
-    if current_user.is_authenticated:
-        return jsonify({'message': 'Already logged in.'}), 200
+    data = request.get_json()
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
     
-    if request.method == 'POST':
-        data = request.get_json()
-        username = data.get('username')
-        email = data.get('email')
-        password = data.get('password')
-        
-        if User.query.filter_by(email=email).first():
-            return jsonify({'message': 'Email already exists.'}), 400
-        
-        if User.query.filter_by(username=username).first():
-            return jsonify({'message': 'Username already exists.'}), 400
-        
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        user = User(username=username, email=email, password=hashed_password)
-        db.session.add(user)
-        db.session.commit()
-        
-        return jsonify({'message': 'Your account has been created!'}), 200
+    if User.query.filter_by(email=email).first():
+        return jsonify({'message': 'Email already exists.'}), 400
+    
+    if User.query.filter_by(username=username).first():
+        return jsonify({'message': 'Username already exists.'}), 400
+    
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    user = User(username=username, email=email, password=hashed_password)
+    db.session.add(user)
+    db.session.commit()
+    
+    return jsonify({'message': 'Your account has been created!'}), 200
 
 @auth.route('/login', methods=['POST'])
 def login():
-    if current_user.is_authenticated:
-        return jsonify({'message': 'Already logged in.'}), 200
+    data = request.get_json()
+    identifier = data.get('identifier')
+    password = data.get('password')
+
+    user = User.query.filter((User.email == identifier) | (User.username == identifier)).first()
+
+    if user and bcrypt.check_password_hash(user.password, password):
+        access_token = create_access_token(identity={'username': user.username, 'email': user.email})
+        return jsonify(access_token=access_token), 200
+    elif not user:
+        return jsonify({'message': 'Wrong email or username.'}), 401
+    else:
+        return jsonify({'message': 'Wrong password.'}), 401
     
-    if request.method == 'POST':
-        data = request.get_json()
-        identifier = data.get('identifier')
-        password = data.get('password')
-
-        if '@' in identifier:
-            user = User.query.filter_by(email=identifier).first()
-        else:
-            user = User.query.filter_by(username=identifier).first()
-        
-        if user and bcrypt.check_password_hash(user.password, password):
-            login_user(user, remember=True)
-            return jsonify({'message': 'Login successful!'}), 200
-        elif not user:
-            return jsonify({'message': 'Wrong email or username.'}), 401
-        else:
-            return jsonify({'message': 'Wrong password.'}), 401
-
-@auth.route('/logout', methods=['POST'])
-@login_required
+@auth.route("/logout", methods=["POST"])
+@jwt_required()
 def logout():
-    logout_user()
-    return jsonify({'message': 'Logged out successfully.'}), 200
+    response = jsonify({"msg": "Logout successful"})
+    unset_jwt_cookies(response)
+    return response, 200
+    
