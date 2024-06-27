@@ -1,43 +1,59 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_user, logout_user, login_required
 from .models import User
 from . import db, bcrypt
 
 auth = Blueprint('auth', __name__)
 
-@auth.route('/register', methods=['GET', 'POST'])
+@auth.route('/register', methods=['POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('main.home'))
+        return jsonify({'message': 'Already logged in.'}), 200
+    
     if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
+        data = request.get_json()
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+        
+        if User.query.filter_by(email=email).first():
+            return jsonify({'message': 'Email already exists.'}), 400
+        
+        if User.query.filter_by(username=username).first():
+            return jsonify({'message': 'Username already exists.'}), 400
+        
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         user = User(username=username, email=email, password=hashed_password)
         db.session.add(user)
         db.session.commit()
-        flash('Your account has been created!', 'success')
-        return redirect(url_for('auth.login'))
-    return render_template('register.html')
+        
+        return jsonify({'message': 'Your account has been created!'}), 200
 
-@auth.route('/login', methods=['GET', 'POST'])
+@auth.route('/login', methods=['POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('main.home'))
+        return jsonify({'message': 'Already logged in.'}), 200
+    
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        user = User.query.filter_by(email=email).first()
+        data = request.get_json()
+        identifier = data.get('identifier')
+        password = data.get('password')
+
+        if '@' in identifier:
+            user = User.query.filter_by(email=identifier).first()
+        else:
+            user = User.query.filter_by(username=identifier).first()
+        
         if user and bcrypt.check_password_hash(user.password, password):
             login_user(user, remember=True)
-            return redirect(url_for('main.home'))
+            return jsonify({'message': 'Login successful!'}), 200
+        elif not user:
+            return jsonify({'message': 'Wrong email or username.'}), 401
         else:
-            flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('login.html')
+            return jsonify({'message': 'Wrong password.'}), 401
 
-@auth.route('/logout')
+@auth.route('/logout', methods=['POST'])
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('main.home'))
+    return jsonify({'message': 'Logged out successfully.'}), 200
