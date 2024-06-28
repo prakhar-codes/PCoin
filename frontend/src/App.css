@@ -15,7 +15,7 @@
 
 .login-error {
   color: red;
-  text-align: center;
+  font-size: 14px;
 }
 
 .login-form {
@@ -50,4 +50,39 @@
 .login-register {
   text-align: center;
   margin-top: 20px;
+}
+
+.input-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input {
+  padding-right: 40px; /* Adjust based on the size of the icon */
+}
+
+.password-icon {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+}
+
+.password-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding: 10px 35px 10px 10px; 
+  box-sizing: border-box; 
+}
+
+.password-wrapper span {
+  position: absolute;
+  top: 30%;
+  right: 10px; /* Adjust based on your design */
+  transform: translateY(-50%);
+  color: #999; /* Color of the icon */
 }

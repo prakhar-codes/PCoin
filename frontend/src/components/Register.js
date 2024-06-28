@@ -1,15 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { AuthContext } from './AuthContext';
+import {Icon} from 'react-icons-kit';
+import {eyeOff} from 'react-icons-kit/feather/eyeOff';
+import {eye} from 'react-icons-kit/feather/eye'
 
 const Register = () => {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [validationError, setValidationError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [icon, setIcon] = useState(eyeOff);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const validateUsername = (username) => {
     const usernameRegex = /^[a-zA-Z0-9]+$/; // Only digits and alphabets
@@ -20,6 +32,16 @@ const Register = () => {
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     // At least 8 characters, one letter, one number, and one special character
     return passwordRegex.test(password);
+  };
+
+  const handleToggle = () => {
+    if (showPassword){
+       setIcon(eyeOff);
+       setShowPassword(false);
+    } else {
+       setIcon(eye);
+       setShowPassword(true);
+    }
   };
 
   const handleRegister = async (e) => {
@@ -90,24 +112,22 @@ const Register = () => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <input
-          className="login-input"
-          type={showPassword ? "text" : "password"}
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <label className="show-password">
+        <div className="password-wrapper">
           <input
-            type="checkbox"
-            checked={showPassword}
-            onChange={() => setShowPassword(!showPassword)}
+            className="login-input"
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
           />
-          Show password
-        </label>
+          <span onClick={handleToggle} className="password-icon">
+            <Icon icon={icon} size={20}/>
+          </span>
+         </div>
         <button className="login-button" type="submit">Register</button>
       </form>
+      <p className="login-register">Already have an account? <Link to="/login">Login here</Link></p>
     </div>
   );
 };
