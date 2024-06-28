@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from './AuthContext';
+import '../styles/auth.css';
 import {Icon} from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {eye} from 'react-icons-kit/feather/eye'
@@ -91,13 +92,13 @@ const Register = () => {
   };
 
   return (
-    <div className="login-container"> {/* Reuse the styling */}
-      <h1 className="login-title">Register</h1>
-      {validationError && <p className="login-error">{validationError}</p>}
-      {error && <p className="login-error">{error}</p>}
-      <form className="login-form" onSubmit={handleRegister}>
+    <div className="auth-container"> {/* Reuse the styling */}
+      <h1 className="auth-title">Register</h1>
+      {validationError && <p className="auth-error">{validationError}</p>}
+      {error && <p className="auth-error">{error}</p>}
+      <form className="auth-form" onSubmit={handleRegister}>
         <input
-          className="login-input"
+          className="auth-input"
           type="text"
           placeholder="Username"
           value={username}
@@ -105,7 +106,7 @@ const Register = () => {
           required
         />
         <input
-          className="login-input"
+          className="auth-input"
           type="email"
           placeholder="Email"
           value={email}
@@ -114,7 +115,7 @@ const Register = () => {
         />
         <div className="password-wrapper">
           <input
-            className="login-input"
+            className="auth-input"
             type={showPassword ? "text" : "password"}
             placeholder="Password"
             value={password}
@@ -125,9 +126,9 @@ const Register = () => {
             <Icon icon={icon} size={20}/>
           </span>
          </div>
-        <button className="login-button" type="submit">Register</button>
+        <button className="auth-button" type="submit">Register</button>
       </form>
-      <p className="login-register">Already have an account? <Link to="/login">Login here</Link></p>
+      <p className="auth-link">Already have an account? <Link to="/login">Login here</Link></p>
     </div>
   );
 };
