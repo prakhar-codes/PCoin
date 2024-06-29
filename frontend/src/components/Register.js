@@ -6,6 +6,8 @@ import '../styles/auth.css';
 import {Icon} from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {eye} from 'react-icons-kit/feather/eye'
+import {key} from 'react-icons-kit/iconic/key'
+import { ec as EC } from 'elliptic';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -17,6 +19,10 @@ const Register = () => {
   const [validationError, setValidationError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [icon, setIcon] = useState(eyeOff);
+  const [showCredentials, setShowCredentials] = useState(true);
+  const [showKeys, setShowKeys] = useState(false);
+  const [privateKey, setPrivateKey] = useState("");
+  const [publicKey, setPublicKey] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -35,17 +41,7 @@ const Register = () => {
     return passwordRegex.test(password);
   };
 
-  const handleToggle = () => {
-    if (showPassword){
-       setIcon(eyeOff);
-       setShowPassword(false);
-    } else {
-       setIcon(eye);
-       setShowPassword(true);
-    }
-  };
-
-  const handleRegister = async (e) => {
+  const handleAddKeys = async(e) => {
     e.preventDefault();
     setValidationError(""); // Clear previous validation errors
 
@@ -63,12 +59,38 @@ const Register = () => {
       );
       return;
     }
+    setShowCredentials(false);
+    handleGenerateKey();
+    setShowKeys(true);
+  };
 
+  const handleGenerateKey = () => {
+    const ec = new EC('secp256k1');
+    const key = ec.genKeyPair();
+    const publicKey = key.getPublic('hex');
+    const privateKey = key.getPrivate('hex');
+    setPrivateKey(privateKey);
+    setPublicKey(publicKey);
+  };
+
+  const handleToggle = () => {
+    if (showPassword){
+       setIcon(eyeOff);
+       setShowPassword(false);
+    } else {
+       setIcon(eye);
+       setShowPassword(true);
+    }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
     try {
       const response = await axios.post("http://localhost:5000/register", {
         username,
         email,
         password,
+        publicKey
       });
       if (response.status === 200) {
         navigate("/login");
@@ -93,41 +115,71 @@ const Register = () => {
 
   return (
     <div className="auth-container"> {/* Reuse the styling */}
-      <h1 className="auth-title">Register</h1>
-      {validationError && <p className="auth-error">{validationError}</p>}
-      {error && <p className="auth-error">{error}</p>}
-      <form className="auth-form" onSubmit={handleRegister}>
-        <input
-          className="auth-input"
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <input
-          className="auth-input"
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <div className="password-wrapper">
-          <input
-            className="auth-input"
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+      {showCredentials && (
+        <>
+          <h1 className="auth-title">Register</h1>
+          {validationError && <p className="auth-error">{validationError}</p>}
+          {error && <p className="auth-error">{error}</p>}
+          <form className="auth-form" onSubmit={handleAddKeys}>
+            <input
+              className="auth-input"
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+            <input
+              className="auth-input"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <div className="password-wrapper">
+              <input
+                className="auth-input"
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <span onClick={handleToggle} className="password-icon">
+                <Icon icon={icon} size={20}/>
+              </span>
+            </div>
+            <button className="auth-button" type="submit">Next</button>
+          </form>
+        </>
+      )}
+      {showKeys && (
+        <>
+        <h1 className="auth-title">Set Key Pair</h1>
+        <form className="auth-form" onSubmit={handleRegister}>
+          <p className="auth-error">Save the private key in a secure place. You will not be able to recover it as it will not be communicated to the server.</p>
+          <p className="auth-heading">Private Key:</p>
+          <textarea
+            className="key-input"
+            value={privateKey}
+            readOnly
           />
-          <span onClick={handleToggle} className="password-icon">
-            <Icon icon={icon} size={20}/>
-          </span>
-         </div>
-        <button className="auth-button" type="submit">Register</button>
-      </form>
+          <p className="auth-heading">Public Key:</p>
+          <textarea
+            className="key-input-public"
+            value={publicKey}
+            readOnly
+          />
+          <button onClick={handleGenerateKey} type="button" className="generate-button">
+            Generate Keys Again  <Icon icon={key} size={14}/>
+          </button> 
+          <button className="auth-button" type="submit">
+            Register
+          </button>
+        </form>
+        </>
+      )}
       <p className="auth-link">Already have an account? <Link to="/login">Login here</Link></p>
     </div>
   );
