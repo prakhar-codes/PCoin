@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
+import Header from '../layout/Header';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from './AuthContext';
-import '../styles/auth.css';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
+import './../../styles/auth.css';
 import {Icon} from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {eye} from 'react-icons-kit/feather/eye'
+import {ic_login} from 'react-icons-kit/md/ic_login'
 
 const Login = () => {
   const navigate = useNavigate();
@@ -62,35 +64,37 @@ const Login = () => {
  }
 
   return (
-    <div className="auth-container">
-      <h1 className="auth-title">Login</h1>
-      {error && <p className="auth-error">{error}</p>}
-      <form className="auth-form" onSubmit={handleLogin}>
-        <input
-          className="auth-input"
-          type="text"
-          placeholder="Email or Username"
-          value={identifier}
-          onChange={(e) => setIdentifier(e.target.value)}
-          required
-        />
-        <div className="password-wrapper">
+    <>
+      <Header headerText={"Don't have an account?"} buttonText={"Register Here"} buttonLink={"/register"} />
+      <div className="auth-container">
+        <h1 className="auth-title">Login</h1>
+        {error && <p className="auth-error">{error}</p>}
+        <form className="auth-form" onSubmit={handleLogin}>
           <input
             className="auth-input"
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            type="text"
+            placeholder="Email or Username"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
             required
           />
-          <span onClick={handleToggle} className="password-icon">
-            <Icon icon={icon} size={20}/>
-          </span>
-         </div> 
-        <button className="auth-button" type="submit">Login</button>
-      </form>
-      <p className="auth-link">Don't have an account? <Link to="/register">Register here</Link></p>
-    </div>
+          <div className="password-wrapper">
+            <input
+              className="auth-input"
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <span onClick={handleToggle} className="password-icon">
+              <Icon icon={icon} size={18}/>
+            </span>
+          </div> 
+          <button className="auth-button" type="submit">Login  <Icon icon={ic_login} size={20}/></button>
+        </form>
+      </div>
+    </>
   );
 }
 

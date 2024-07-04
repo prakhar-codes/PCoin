@@ -1,0 +1,137 @@
+.header a, .header a:visited { 
+  text-decoration: none;
+  color: inherit; 
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #ffffff; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-bottom: 1px solid #e0e0e0;
+}
+  
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+  
+.logo {
+  width: 50px; /* Adjust based on actual logo size */
+  height: auto;
+  margin-right: 10px;
+}
+  
+.logo-name {
+  color: blue;
+  font-size: 24px;
+  font-weight: bold;
+}
+  
+.text-button-container {
+  display: flex;
+  align-items: center;
+}
+  
+.header-text {
+  margin-right: 20px;
+  font-size: 16px;
+}
+
+.nav-icon {
+  color: #3d3d3d;
+  cursor: pointer;
+  margin-left: 60px;
+  font-size: 16px;
+}
+
+.nav-icon-selected {
+  color: black;
+}
+
+.nav-icon:hover {
+  color: black;
+}
+  
+.header-btn {
+  padding: 10px 20px;
+  color: blue;
+  background-color: white;
+  border: 1.5px solid blue;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.nav-btn {
+  padding: 10px 20px;
+  background-color: blue;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+  
+.header-btn:hover {
+  color: darkblue;
+  border-color: darkblue;
+}
+
+.nav-btn:hover {
+  background-color: darkblue;
+}
+
+.menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 240%;
+  right: -10%;
+  min-width: 250px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  z-index: 1;
+}
+
+.dropdown-menu div {
+  cursor: pointer;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-menu div:hover {
+  background-color: #f1f1f1;
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 1000; /* Ensure it's above other elements */
+  font-size: 16px;
+}
+
+.fade-out {
+  animation: fadeOut 1s ease 1s forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}

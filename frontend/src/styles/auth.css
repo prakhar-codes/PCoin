@@ -10,12 +10,10 @@
 
 .auth-title {
     text-align: center;
-    color: #333;
 }
 
 .auth-heading {
     font-size: 14px;
-    color: #333;
 }
 
 .auth-error {
@@ -56,16 +54,17 @@
 }
 
 .auth-button {
-    background-color: #007bff;
+    background-color: blue;
     color: white;
     padding: 10px;
+    margin-bottom: 30px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
 }
 
 .generate-button {
-    background-color: #007bff;
+    background-color: blue; /* #007bff */
     color: white;
     padding: 10px;
     margin-bottom: 20px;
@@ -75,12 +74,11 @@
 }
 
 .auth-button:hover {
-    background-color: #0056b3;
+    background-color: darkblue;
 }
 
-.auth-link {
-    text-align: center;
-    margin-top: 20px;
+.generate-button:hover {
+    background-color: darkblue;
 }
 
 .password-wrapper {
@@ -97,7 +95,7 @@
 .password-wrapper span {
     position: absolute;
     top: 30%;
-    right: 10px; /* Adjust based on your design */
+    right: 10px;
     transform: translateY(-50%);
-    color: #999; /* Color of the icon */
+    color: black; 
 }

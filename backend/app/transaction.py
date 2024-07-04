@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
-from .models import Transaction, UTXO
-from . import db
+from .models import User, Transaction, UTXO
+from . import db, bcrypt
 from .utils.crypto import generate_hash, verify_signature, sign_transaction
 import json
 
@@ -13,12 +13,22 @@ def create_transaction():
     transaction = data['transaction']
     public_key = data['publicKey']
     private_key = data['privateKey']
+    username = data['username']
+    password = data['password']
+    is_unauthorized = data['isUnauthorized']
 
     tx_content = json.dumps(transaction)
-    
-    signature = sign_transaction(tx_content, private_key)
-    if not verify_signature(tx_content, signature, public_key):
-        return jsonify({'message': 'Error signing your transaction. Please check your keys.'}), 400
+    user = User.query.filter(User.username == username).first()
+
+    if not bcrypt.check_password_hash(user.password, password):
+        return jsonify({'message': 'Error validating the payment. Wrong password.'}), 401
+
+    try:
+        signature = sign_transaction(tx_content, private_key)
+        if not verify_signature(tx_content, signature, public_key) and not is_unauthorized:
+            return jsonify({'message': 'Error signing your transaction. Please check your keys.'}), 400
+    except Exception as e:
+        return jsonify({'message': 'Error signing your transaction. Please check your keys.'}), 403
 
     tx_hash = generate_hash(tx_content)
 
@@ -44,27 +54,3 @@ def create_transaction():
     
     db.session.commit()
     return jsonify({'message': 'Transaction recorded.'}), 200
-
-# # Retrieve UTXO by id
-# @dashboard.route('/utxo/<int:utxo_id>', methods=['GET'])
-# def get_utxo(utxo_id):
-#     utxo = UTXO.query.get(utxo_id)
-#     if utxo:
-#         return jsonify({
-#             'id': utxo.id,
-#             'txid': utxo.txid,
-#             'output_address': utxo.output_address,
-#             'value': utxo.value,
-#             'is_spent': utxo.is_spent
-#         })
-#     return jsonify({'error': 'UTXO not found'}), 404
-
-# # Mark UTXO as spent
-# @dashboard.route('/utxo/<int:utxo_id>/spend', methods=['POST'])
-# def spend_utxo(utxo_id):
-#     utxo = UTXO.query.get(utxo_id)
-#     if utxo and not utxo.is_spent:
-#         utxo.is_spent = True
-#         db.session.commit()
-#         return jsonify({'message': 'UTXO spent successfully'})
-#     return jsonify({'error': 'UTXO not found or already spent'}), 404

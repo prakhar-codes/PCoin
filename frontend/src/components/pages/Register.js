@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
+import Header from '../layout/Header';
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
-import { AuthContext } from './AuthContext';
-import '../styles/auth.css';
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from '../contexts/AuthContext';
+import './../../styles/auth.css';
 import {Icon} from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
-import {eye} from 'react-icons-kit/feather/eye'
-import {key} from 'react-icons-kit/iconic/key'
+import {eye} from 'react-icons-kit/feather/eye';
+import {key} from 'react-icons-kit/iconic/key';
+import {arrowRight} from 'react-icons-kit/feather/arrowRight';
+import {tick} from 'react-icons-kit/typicons/tick'
 import { ec as EC } from 'elliptic';
 
 const Register = () => {
@@ -114,74 +117,76 @@ const Register = () => {
   };
 
   return (
-    <div className="auth-container"> {/* Reuse the styling */}
-      {showCredentials && (
-        <>
-          <h1 className="auth-title">Register</h1>
-          {validationError && <p className="auth-error">{validationError}</p>}
-          {error && <p className="auth-error">{error}</p>}
-          <form className="auth-form" onSubmit={handleAddKeys}>
-            <input
-              className="auth-input"
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-            <input
-              className="auth-input"
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <div className="password-wrapper">
+    <>
+      <Header headerText={"Already have an account?"} buttonText={"Login Here"} buttonLink={"/login"} />
+      <div className="auth-container"> 
+        {showCredentials && (
+          <>
+            <h1 className="auth-title">Register</h1>
+            {validationError && <p className="auth-error">{validationError}</p>}
+            {error && <p className="auth-error">{error}</p>}
+            <form className="auth-form" onSubmit={handleAddKeys}>
               <input
                 className="auth-input"
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
               />
-              <span onClick={handleToggle} className="password-icon">
-                <Icon icon={icon} size={20}/>
-              </span>
-            </div>
-            <button className="auth-button" type="submit">Next</button>
+              <input
+                className="auth-input"
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <div className="password-wrapper">
+                <input
+                  className="auth-input"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <span onClick={handleToggle} className="password-icon">
+                  <Icon icon={icon} size={18}/>
+                </span>
+              </div>
+              <button className="auth-button" type="submit">Next     <Icon icon={arrowRight} size={18}/></button>
+            </form>
+          </>
+        )}
+        {showKeys && (
+          <>
+          <h1 className="auth-title">Set Key Pair</h1>
+          <form className="auth-form" onSubmit={handleRegister}>
+            <p className="auth-error">Save the private key in a secure place. You will not be able to recover it as it will not be communicated to the server.</p>
+            <p className="auth-heading">Private Key:</p>
+            <textarea
+              className="key-input"
+              value={privateKey}
+              readOnly
+            />
+            <p className="auth-heading">Public Key:</p>
+            <textarea
+              className="key-input-public"
+              value={publicKey}
+              readOnly
+            />
+            <button onClick={handleGenerateKey} type="button" className="generate-button">
+              Generate Keys Again   <Icon icon={key} size={14}/>
+            </button> 
+            <button className="auth-button" type="submit">
+              Register   <Icon icon={tick} size={20}/>
+            </button>
           </form>
-        </>
-      )}
-      {showKeys && (
-        <>
-        <h1 className="auth-title">Set Key Pair</h1>
-        <form className="auth-form" onSubmit={handleRegister}>
-          <p className="auth-error">Save the private key in a secure place. You will not be able to recover it as it will not be communicated to the server.</p>
-          <p className="auth-heading">Private Key:</p>
-          <textarea
-            className="key-input"
-            value={privateKey}
-            readOnly
-          />
-          <p className="auth-heading">Public Key:</p>
-          <textarea
-            className="key-input-public"
-            value={publicKey}
-            readOnly
-          />
-          <button onClick={handleGenerateKey} type="button" className="generate-button">
-            Generate Keys Again  <Icon icon={key} size={14}/>
-          </button> 
-          <button className="auth-button" type="submit">
-            Register
-          </button>
-        </form>
-        </>
-      )}
-      <p className="auth-link">Already have an account? <Link to="/login">Login here</Link></p>
-    </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 

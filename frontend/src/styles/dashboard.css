@@ -1,0 +1,113 @@
+.dashboard-container {
+    text-align: center;
+    width: 80%;
+    margin: auto;
+}
+
+.dashboard-container a{
+    text-decoration: underline;
+    color: rgb(0, 0, 161);
+}
+
+.welcome-message {
+    margin-top: 5rem;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.PC {
+    margin-right: 40px;
+    font-size: 1rem;
+    
+}
+
+.hash {
+    text-decoration: underline;
+    color: rgb(0, 0, 161);
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.node-card {
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column; /* Changed to column layout */
+    align-items: flex-start;
+}
+
+.hash-container { /* New class for hash and button container */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.pay-container { /* New class for hash and button container */
+    margin-top: 20px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.pay-amount {
+    text-align: right;
+    width: 80px;
+    margin-right: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.pay-button {
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.pay-button:hover {
+    background-color: darkblue;
+}
+
+.transaction-container {
+    text-align: center;
+    margin: auto;
+    margin-top: 50px;
+    width: 50%;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.transaction-button {
+    margin: 20px;
+    background-color: blue;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.transaction-button:hover {
+    background-color: darkblue;
+}
