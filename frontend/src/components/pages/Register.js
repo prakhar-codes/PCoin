@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import Header from '../layout/Header';
+import Toast  from '../layout/Toast';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from '../contexts/AuthContext';
@@ -9,7 +10,8 @@ import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {eye} from 'react-icons-kit/feather/eye';
 import {key} from 'react-icons-kit/iconic/key';
 import {arrowRight} from 'react-icons-kit/feather/arrowRight';
-import {tick} from 'react-icons-kit/typicons/tick'
+import {tick} from 'react-icons-kit/typicons/tick';
+import {ic_content_copy} from 'react-icons-kit/md/ic_content_copy';
 import { ec as EC } from 'elliptic';
 
 const Register = () => {
@@ -26,6 +28,8 @@ const Register = () => {
   const [showKeys, setShowKeys] = useState(false);
   const [privateKey, setPrivateKey] = useState("");
   const [publicKey, setPublicKey] = useState("");
+  const [toast, setToast] = useState();
+  const [toastKey, setToastKey] = useState(0);
 
   useEffect(() => {
     if (user) {
@@ -84,6 +88,20 @@ const Register = () => {
        setIcon(eye);
        setShowPassword(true);
     }
+  };
+
+  const copyToClipboard = (item) => {
+    const textToCopy = item === 'private' ? privateKey : publicKey;
+    
+    navigator.clipboard.writeText(textToCopy)
+      .then(() => {
+        setToastKey(prevKey => prevKey + 1);
+        setToast({message: `${item.charAt(0).toUpperCase() + item.slice(1)} Key copied to clipboard`, color: 'green'});
+      })
+      .catch(err => {
+        setToastKey(prevKey => prevKey + 1);
+        setToast({message: `Error copying ${item} key to clipboard`, color: 'red'});
+      });
   };
 
   const handleRegister = async (e) => {
@@ -165,17 +183,27 @@ const Register = () => {
           <form className="auth-form" onSubmit={handleRegister}>
             <p className="auth-error">Save the private key in a secure place. You will not be able to recover it as it will not be communicated to the server.</p>
             <p className="auth-heading">Private Key:</p>
-            <textarea
-              className="key-input"
-              value={privateKey}
-              readOnly
-            />
+            <div className="key-container">
+              <textarea
+                className="key-input"
+                value={privateKey}
+                readOnly
+              />
+              <button onClick={() => copyToClipboard("private")} className="icon-button" type="button">
+                <Icon icon={ic_content_copy} size={20}/>
+              </button>
+            </div>
             <p className="auth-heading">Public Key:</p>
-            <textarea
-              className="key-input-public"
-              value={publicKey}
-              readOnly
-            />
+            <div className="key-container">
+              <textarea
+                className="key-input-public"
+                value={publicKey}
+                readOnly
+              />
+              <button onClick={() => copyToClipboard("public")} className="icon-button" type="button">
+                  <Icon icon={ic_content_copy} size={20}/>
+                </button>
+            </div>
             <button onClick={handleGenerateKey} type="button" className="generate-button">
               Generate Keys Again   <Icon icon={key} size={14}/>
             </button> 
@@ -186,6 +214,7 @@ const Register = () => {
           </>
         )}
       </div>
+      {toastKey > 0 && <Toast key={toastKey} message={toast.message} color={toast.color} />}
     </>
   );
 };

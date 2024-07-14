@@ -33,24 +33,31 @@
     border-radius: 4px;
 }
 
+.key-container {
+    display: flex;
+    justify-content: space-between;
+}
+
 .key-input {
     resize: none;
+    width: 100%;
     height: 30px;
     margin-bottom: 20px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    color: #727272;
+    color: black;
 }
 
 .key-input-public {
     resize: none;
+    width: 100%;
     height: 50px;
     margin-bottom: 20px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    color: #727272;
+    color: black;
 }
 
 .auth-button {

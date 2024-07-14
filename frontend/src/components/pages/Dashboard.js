@@ -15,10 +15,16 @@ const Dashboard = () => {
   const [error, setError] = useState('');
   const { user } = useContext(AuthContext);
   const [nodes, setNodes] = useState([]);
+  const [completedTransactions, setCompletedTransactions] = useState([]);
   const { transactions, setTransactions } = useContext(TransactionContext);
+  const [showNetwork, setShowNetwork] = useState(true);
+  const [showTransactions, setShowTransactions] = useState(false);
   const [id, setId] = useState(0);
   const [toast, setToast] = useState();
   const [toastKey, setToastKey] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredNodes = nodes.filter(node => node.hash.includes(searchQuery));
 
   useEffect(() => {
     if (!user) {
@@ -43,7 +49,37 @@ const Dashboard = () => {
       }
     };
     fetchNodes();
+    const fetchMyTransactions = async () => {
+      try {
+        const response = await axios.post('http://localhost:5000/my-transactions', { hash: user.hash });
+        if (response.status === 200) {
+          console.log(response.data);
+          setCompletedTransactions(response.data);
+        } else {
+          setError(response.data || 'Failed to fetch transactions. Please try again.');
+        }
+      } catch (error) {
+        if (error.response) {
+          setError(`${error.response.data.message || "An error occurred"}`);
+        } else if (error.request) {
+          setError("No response from server. Please try again later.");
+        } else {
+          setError("Request error. Please try again.");
+        }
+      }
+    };
+    fetchMyTransactions();
     }, [user, navigate]);
+
+    const toggleNetwork = () => {
+        setShowNetwork(true);
+        setShowTransactions(false);
+    };
+
+    const toggleTransactions = () => {
+        setShowTransactions(true);
+        setShowNetwork(false);
+    };
 
   const copyToClipboard = () => {
     if (user && user.hash) {
@@ -97,30 +133,73 @@ const Dashboard = () => {
         <Navbar />
         <div className="dashboard-container">
           <h1 className="welcome-message">Welcome, {user ? user.username : 'Guest'}!</h1>
-          <p>Your hash : <span className='hash'>{user ? user.hash : 'undefined'} </span>
+          <p>Your hash : #<span className='hash'>{user ? user.hash : 'undefined'} </span>
             <button onClick={copyToClipboard} className="icon-button">
               <Icon icon={ic_content_copy} size={20}/>
             </button>
           </p>
+          <p>Wallet Balance : 100.00 PC</p>
           {error && <p className="error-message">{error}</p>}
-          <ul className="node-list">
-            {nodes.map((node, index) => (
-              node.hash !== user.hash && 
-              <li key={index} className="node-card">
-                <div className="hash-container">
-                  <span className="hash">{node.hash}</span>
-                  <button className="pay-button" onClick={() => handlePayButtonClick(node.hash)}>{node.buttonText || "Pay to hash"}</button>
-                </div>
-                {node.showInput &&
-                  <div className="pay-container">
-                    <input type="number" className="pay-amount" placeholder="Enter amount" value={node.amount} onChange={(e) => handleInputChange(index, e)}/>
-                    <span className="PC">PC   </span>
-                    <button className="pay-button" onClick={() => handleAddButtonClick(node)}><Icon icon={plus} size={12} /> Add to PVault</button>
+          <div className="navbar">
+              <button className={`navbar-item ${showNetwork ? 'active' : ''}`} onClick={toggleNetwork}>My Network</button>
+              <button className={`navbar-item ${showTransactions ? 'active' : ''}`} onClick={toggleTransactions}>My Transactions</button>
+          </div>
+          {showNetwork && (
+            <>
+            <div className="searchbar">
+              <input
+                type="text"
+                placeholder="Search for a hash address"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <ul className="node-list">
+              {filteredNodes.map((node, index) => (
+                node.hash !== user.hash && 
+                <li key={index} className="node-card">
+                  <div className="hash-container">
+                    <p>User Hash : #<span className="hash">{node.hash}</span></p>
+                    <button className="pay-button" onClick={() => handlePayButtonClick(node.hash)}>{node.buttonText || "Pay to hash"}</button>
                   </div>
-                }
-              </li>
-            ))}
-          </ul>
+                  {node.showInput &&
+                    <div className="pay-container">
+                      <input type="number" className="pay-amount" placeholder="Enter amount" value={node.amount} onChange={(e) => handleInputChange(index, e)}/>
+                      <span className="PC">PC   </span>
+                      <button className="pay-button" onClick={() => handleAddButtonClick(node)}><Icon icon={plus} size={12} /> Add to PVault</button>
+                    </div>
+                  }
+                </li>
+              ))}
+            </ul>
+            </>
+          )}
+          {showTransactions && (
+            <ul className="node-list">
+              {completedTransactions.length === 0 && <li className="node-card">No transactions to show</li>}
+              {completedTransactions.map((transaction, index) => (
+                <li key={index} className="node-card">
+                  <div className="hash-container">
+                    <p>Transaction Hash : #<span className="hash">{transaction.hash}</span></p>
+                    <p>Timestamp : {transaction.timestamp}</p>
+                    <p>Pending</p>
+                  </div>
+                  <div className="tx-container">
+                    {transaction.utxos.map((utxo, utxo_index) => ( utxo.address != user.hash &&
+                      <li key={utxo_index} className="tx-card">
+                        <p className='left'>To : #<span className="hash">{utxo.address}</span></p>
+                        <p>Amount : {utxo.amount} PC</p>
+                      </li>
+                    ))}
+                    <li className="tx-card">
+                      <p>Transaction Fee</p>
+                      <p>Amount : {transaction.transaction_fee} PC</p>
+                    </li>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         {toastKey > 0 && <Toast key={toastKey} message={toast.message} color={toast.color} />}
       </>
