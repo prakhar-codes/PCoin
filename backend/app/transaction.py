@@ -18,6 +18,7 @@ def create_transaction():
     is_unauthorized = data['isUnauthorized']
 
     tx_content = json.dumps(transaction)
+    
     user = User.query.filter(User.username == username).first()
 
     if not bcrypt.check_password_hash(user.password, password):

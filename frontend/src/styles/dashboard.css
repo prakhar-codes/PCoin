@@ -9,6 +9,17 @@
     color: rgb(0, 0, 161);
 }
 
+.dashboard-top {
+    text-align: center;
+    color: white;
+    padding: 150px 0;
+    background-image: url('../assets/bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    width: 100%;
+}
+
 .welcome-message {
     margin-top: 4rem;
     font-size: 2.5rem;
@@ -16,9 +27,15 @@
 }
 
 .PC {
-    margin-right: 40px;
+    margin-right: 20px;
     font-size: 1rem;
     
+}
+
+.your-hash {
+    margin: auto;
+    margin-bottom: 50px;
+    padding: 10px;
 }
 
 .hash {
@@ -43,18 +60,19 @@
 
 .navbar-item {
     width: 200px;
-    height: 40px;
-    border-radius: 20px;
+    height: 50px;
+    border-radius: 25px;
     border: none;
     color: black;
     margin: 0 1rem;
     cursor: pointer;
-    font-size: 1.2rem;
+    font-size: 1rem;
     text-decoration: none;
 }
 
 .active {
-    background-color: rgb(212, 212, 212);
+    background-color: rgb(0, 0, 77);
+    color: white;
 }
 
 .navbar-item:hover {
@@ -62,7 +80,7 @@
 }
 
 .active:hover {
-    background-color: rgb(212, 212, 212);
+    background-color: rgb(0, 0, 102);
 }
 
 .searchbar {
@@ -80,18 +98,22 @@
     font-size: 1rem;
 }
 
+.node-list {
+    padding-bottom: 50px;
+}
+
 .node-card {
     background-color: white;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     border-radius: 8px;
     padding: 20px;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
-.hash-container { /* New class for hash and button container */
+.hash-container { 
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -104,7 +126,7 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     border-radius: 8px;
     padding: 5px;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
     margin-top: 1rem;
     display: flex;
     justify-content: space-between;
@@ -142,6 +164,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .pay-button {
+    margin: 0 10px;
     background-color: blue;
     color: white;
     border: none;
@@ -160,6 +183,7 @@ input[type="number"]::-webkit-outer-spin-button {
     margin-top: 50px;
     width: 50%;
     padding: 20px;
+    margin-top: 150px;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

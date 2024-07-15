@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../layout/Header';
 import axios from 'axios';
@@ -49,7 +49,7 @@ const Transaction = () => {
 
     var utxos = [], totalOutput = 0.0;
     transactions.forEach(transaction => {
-      utxos.push({ address: transaction.hash, amount: transaction.amount });
+      utxos.push({ address: transaction.hash, amount: parseFloat(transaction.amount) });
       totalOutput += parseFloat(transaction.amount);
     });
     utxos.push({ address: user.hash, amount: 100.0-parseFloat(totalOutput)-parseFloat(transactionFee) });
@@ -60,7 +60,6 @@ const Transaction = () => {
         transactionFee: parseFloat(transactionFee?transactionFee:0.0),
         utxos: utxos
     };
-    console.log(transaction);
     try {
       const response = await axios.post('http://localhost:5000/transaction', {
         transaction : transaction, 

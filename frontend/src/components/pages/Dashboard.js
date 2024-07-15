@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import Navbar from '../layout/Navbar';
 import Toast  from '../layout/Toast';
 import axios from "axios";
@@ -23,6 +23,8 @@ const Dashboard = () => {
   const [toast, setToast] = useState();
   const [toastKey, setToastKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
+  const networkSectionRef = useRef(null);
+  const transactionsSectionRef = useRef(null);
 
   const filteredNodes = nodes.filter(node => node.hash.includes(searchQuery));
 
@@ -53,7 +55,6 @@ const Dashboard = () => {
       try {
         const response = await axios.post('http://localhost:5000/my-transactions', { hash: user.hash });
         if (response.status === 200) {
-          console.log(response.data);
           setCompletedTransactions(response.data);
         } else {
           setError(response.data || 'Failed to fetch transactions. Please try again.');
@@ -74,11 +75,17 @@ const Dashboard = () => {
     const toggleNetwork = () => {
         setShowNetwork(true);
         setShowTransactions(false);
+        if (networkSectionRef.current) {
+          networkSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
     };
 
     const toggleTransactions = () => {
         setShowTransactions(true);
         setShowNetwork(false);
+        if (transactionsSectionRef.current) {
+          transactionsSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
     };
 
   const copyToClipboard = () => {
@@ -131,21 +138,24 @@ const Dashboard = () => {
   return (
       <>
         <Navbar />
-        <div className="dashboard-container">
+        <div className="dashboard-top">
           <h1 className="welcome-message">Welcome, {user ? user.username : 'Guest'}!</h1>
-          <p>Your hash : #<span className='hash'>{user ? user.hash : 'undefined'} </span>
-            <button onClick={copyToClipboard} className="icon-button">
-              <Icon icon={ic_content_copy} size={20}/>
-            </button>
-          </p>
           <p>Wallet Balance : 100.00 PC</p>
+        </div>
+        <div className="dashboard-container">
           {error && <p className="error-message">{error}</p>}
           <div className="navbar">
               <button className={`navbar-item ${showNetwork ? 'active' : ''}`} onClick={toggleNetwork}>My Network</button>
               <button className={`navbar-item ${showTransactions ? 'active' : ''}`} onClick={toggleTransactions}>My Transactions</button>
           </div>
+          <div ref={networkSectionRef}>
           {showNetwork && (
             <>
+            <p className="your-hash">Your hash : #<span className='hash'>{user ? user.hash : 'undefined'} </span>
+              <button onClick={copyToClipboard} className="icon-button">
+                <Icon icon={ic_content_copy} size={20}/>
+              </button>
+            </p>
             <div className="searchbar">
               <input
                 type="text"
@@ -174,7 +184,10 @@ const Dashboard = () => {
             </ul>
             </>
           )}
+          </div>
+          <div ref={transactionsSectionRef}>
           {showTransactions && (
+            <>
             <ul className="node-list">
               {completedTransactions.length === 0 && <li className="node-card">No transactions to show</li>}
               {completedTransactions.map((transaction, index) => (
@@ -199,7 +212,9 @@ const Dashboard = () => {
                 </li>
               ))}
             </ul>
+            </>
           )}
+          </div>
         </div>
         {toastKey > 0 && <Toast key={toastKey} message={toast.message} color={toast.color} />}
       </>

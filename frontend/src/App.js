@@ -7,6 +7,7 @@ import Login from './components/pages/Login';
 import Register from './components/pages/Register';
 import Dashboard from './components/pages/Dashboard';
 import Transaction from './components/pages/Transaction';
+import Minepool from './components/pages/Minepool';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/register" element={<Register/>} />
             <Route path="/dashboard" element={<Dashboard/>} />
             <Route path="/transaction" element={<Transaction/>} /> 
+            <Route path="/minepool" element={<Minepool/>} />
           </Routes>
         </div>
       </TransactionProvider>

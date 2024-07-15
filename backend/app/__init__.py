@@ -29,11 +29,13 @@ def create_app():
     from .routes import main as main_blueprint
     from .auth import auth as auth_blueprint
     from .dashboard import dashboard as dashboard_blueprint
+    from .minepool import minepool as minepool_blueprint
     from .transaction import transaction as transaction_blueprint
 
     app.register_blueprint(main_blueprint)
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(dashboard_blueprint)
+    app.register_blueprint(minepool_blueprint)
     app.register_blueprint(transaction_blueprint)
 
     with app.app_context():

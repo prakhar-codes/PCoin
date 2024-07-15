@@ -1,0 +1,194 @@
+.minepool-body {
+    /* margin-top: -20px; */
+    min-height: 100vh;
+    background-image: url('../assets/bg2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.minepool-container {
+    text-align: center;
+    width: 80%;
+    margin: auto;
+}
+
+.minepool-header a, .minepool-header a:visited { 
+    text-decoration: none;
+    color: inherit; 
+  }
+  
+  .minepool-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    background-color: #ffffff; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-bottom: 1px solid #e0e0e0;
+    z-index: 1000;
+  }
+    
+  .minepool-logo-container {
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+  }
+    
+  .minepool-logo {
+    width: 50px; 
+    height: auto;
+    margin-right: 10px;
+  }
+    
+  .minepool-logo-name {
+    text-decoration: none;
+    color: blue;
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .minepool {
+    margin-left: 25px;
+    text-decoration: none;
+    color: orangered;
+  }
+    
+  .minepool-header-text-container {
+    display: flex;
+    align-items: center;
+    padding-right: 20px;
+  }
+    
+  .minepool-header-text {
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+    margin-right: 0;
+    margin-left: 40px;
+    font-size: 16px;
+  }
+
+  .minepool-header-text:hover {
+    color: orangered;
+  }
+  
+  .nav-icon {
+    color: #3d3d3d;
+    cursor: pointer;
+    margin-left: 40px;
+    font-size: 16px;
+  }
+  
+  .nav-icon-selected {
+    color: black;
+  }
+  
+  .nav-icon:hover {
+    color: black;
+  }
+
+  .menu-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-menu {
+    background-color: white;
+    position: absolute;
+    top: 240%;
+    right: -10%;
+    min-width: 250px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    z-index: 1;
+  }
+  
+  .dropdown-menu div {
+    cursor: pointer;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown-menu div:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 1000; 
+    font-size: 16px;
+  }
+
+  .minepool-top {
+    text-align: center;
+    padding: 50px 0;
+    width: 100%;
+  }
+
+  .minepool-navbar {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    /* background-color: #afafaf; */
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+.minepool-navbar-item {
+    width: 200px;
+    height: 50px;
+    border-radius: 25px;
+    border: none;
+    color: black;
+    margin: 0 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    text-decoration: none;
+}
+
+.minepool-active {
+    background-color: rgb(0, 0, 77);
+    color: white;
+}
+
+.minepool-navbar-item:hover {
+    background-color: rgb(246, 246, 246);
+}
+
+.minepool-active:hover {
+    background-color: rgb(0, 0, 102);
+}
+  
+  .minepool-welcome-message {
+    margin-top: 10rem;
+    font-size: 2.5rem;
+  }
+
+  .fade-out {
+    animation: fadeOut 1s ease 1s forwards;
+  }
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+
+  
